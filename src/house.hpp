@@ -58,7 +58,6 @@ class KeyList
         {
             int count = 0;
             keyAcc(head, &count);
-            std::cout << "successfully deleted " << count << " keys from the list." << std::endl;
         };
         void keyAcc(Key * head, int * count)
         {
