@@ -8,107 +8,133 @@
 
 using namespace std;
 
-
-std::string owner_name;
-string input = "";
-
-struct userkey 
+struct KeyInLock
 {
     string username;
     string key;
 };
 
-//for the house
-vector <string> inside; //list of everybody inside
-vector <string> allowed;
-vector <userkey> inlock; //keys in the lock
-vector <string> validKeys;
+vector<string> authorized_keys;
+vector<string> authorized_users;
+vector<KeyInLock> inserted_keys;
+vector<string> inside_users;
 
+string findUsersKeyInLock(string user)
+{
+    string key = NULL;
+    for(int i = 0; i < inserted_keys.size(); i++)
+    {
+        if(inserted_keys[i].username == user)
+        {
+            return inserted_keys[i].key;
+        }
+    }
+    return key;
+}
 
+bool checkKey(string key)
+{
+    for(int i = 0; i < authorized_keys.size(); i++)
+    {
+        if(authorized_keys[i] == key)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+bool isAuthorized(string user)
+{
+    for(int i = 0; i < authorized_users.size(); i++)
+    {
+        if(authorized_users[i] == user)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
 
-
-//vector<string> 
 int main(int argc, char * argv[])
 {
-    owner_name = (std::string)argv[1];
-    //std::cout << "Valid keys: " << std::endl;
+    //initialization
+    string owner_name = (std::string)argv[1];
+    authorized_keys.push_back("FIREFIGHTER_SECRET_KEY");
     for(int i = 2; i < argc; i++)
     {
-        validKeys.push_back((std::string)argv[i]);
+        authorized_keys.push_back((std::string)argv[i]);
     }
+
+    //Main loop
+    string input;
     while(getline(cin, input))
     {
-        cin.clear();
-        
-        //tokenize input
-        vector <std::string> toks; 
-        stringstream check1(input); 
-        string intermediate; 
-        while(getline(check1, intermediate, ' ')) 
-        { 
-            toks.push_back(intermediate); 
-        } 
+        //tokenize line
+        string buff;
+        stringstream ss(input);
+        vector<string> tokens;
+        while(getline(ss,buff,' ')){ tokens.push_back(buff);};
 
-        //interpereting input
-        if(toks[0] == "INSERT") 
-        { 
-            struct userkey temp = {toks[2],toks[3]};
-            cout << "KEY " << temp.key << " INSERTED BY " << temp.username << endl;
-            inlock.push_back(temp);
-        }
-        if(toks[0] == "TURN")
+        //determine which command
+        string command = tokens[0];
+        
+
+        if(command == "INSERT")
         {
-            string turner = toks[2];
-            bool keyFound = 0;
-            //find turners key in the lock
-            string turnersKey;
-            for(int i = 0;i<inlock.size(); i++)
+            struct KeyInLock keyToInsert={tokens[2],tokens[3]};
+            inserted_keys.push_back(keyToInsert);
+            cout << "KEY " << keyToInsert.key << " INSERTED BY " << keyToInsert.username << endl;
+        }
+        else if(command == "TURN")
+        {
+            string username = tokens[2];
+            string usersKey = findUsersKeyInLock(username);
+            if(checkKey(usersKey))
             {
-                if( inlock[i].username == turner)//if found
+                authorized_users.push_back(username);
+                cout << "SUCCESS " << username << " TURNS KEY " << usersKey << endl;
+            }
+            else
+            {
+                cout << "FAILURE " << username << " UNABLE TO TURN KEY " << usersKey << endl;
+            }
+        }
+        else if(command == "ENTER")
+        {
+            string username = tokens[2];
+            if(isAuthorized(username))
+            {
+                inside_users.push_back(username);
+                cout << "ACCESS ALLOWED" << endl;
+            } else {cout << "ACCESS DENIED";}
+        }
+        else if(command == "WHO'S")
+        {
+
+            if(inside_users.size() == 0) { cout << "NOBODY HOME" << endl;}
+            else
+            {
+                for(int i = 0; i < inside_users.size(); i++)
                 {
-                    turnersKey = inlock[i].key;
-                    bool validKey = 0;
-                    for(int i = 0;i<validKeys.size();i++)
-                    {
-                        if(validKeys[i] == turnersKey)
-                        {
-                            validKey = 1;
-                        }
-                    }
-                    if(validKey)
-                    {
-                        allowed.push_back(turner);
-                        cout << "SUCCESS " << turner << " TURNS KEY " << turnersKey << endl;
-                        keyFound = 1;
-                    }
+                    cout << inside_users[i] << ", ";
                 }
             }
-            if(!keyFound){cout << "FAILURE " << turner << " UNABLE TO TURN KEY " << turnersKey << endl;}
+            std::cout << endl;
         }
-        if(toks[0] == "ENTER")
+        else if(command == "CHANGE")
         {
-            string enterer = toks[2];
-            bool permission = 0;
-            for(int i = 0;i<allowed.size();i++)
+            owner_name = tokens[2];
+            authorized_keys.clear();
+            for(int i = 3; i < tokens.size(); i++)
             {
-                if(allowed[i] == enterer)
-                {
-                   inside.push_back(enterer);
-                   cout << "ACCESS ALLOWED" << endl; 
-                   permission = 1;
-                }
-            }
-            if(!permission)
-            {
-                cout << "ACCESS DENIED" << endl;
+                authorized_keys.push_back(tokens[i]);
             }
         }
-        if(toks[0] == "WHO'S?")
+        else if(command == "LEAVE")
         {
-            for(int i = 0; i < inside.size(); i++)
-            {
-                cout << inside[i] << endl;
-            }
+            
         }
+
+        cin.clear();
     }
 }
