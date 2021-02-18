@@ -1,7 +1,7 @@
 # SecureThisHouse
 Basic security protocol implementation using a lock and key model to 'secure' access to a house
 
-# Policy
+## Policy
 
 Only users with an authorized key can enter the house. To enter the house, the user must first:
 
@@ -32,7 +32,7 @@ For example, the following situations will never happen:
     turn, enter
     insert, turn, turn, enter
 
-# Interface
+## Interface
 
 The executable should be started with the following CLI format:
 
@@ -40,7 +40,7 @@ The executable should be started with the following CLI format:
 
 where <owner_name> is the name of the owner, and <key_1> through <key_n> are all authorized keys for the house.
 
-# Commands
+## Commands
 
 INSERT KEY <user_name> <key>
 
@@ -68,7 +68,7 @@ LEAVE HOUSE <user_name>
 
 If any events are received that are not according to this specification, the response will be: ERROR.
 
-# Example
+## Example
 
 Running the program as follows:
 
