@@ -76,21 +76,21 @@ Running the program as follows:
 
 Given the input:
 
-INSERT KEY adam key
-TURN KEY adam
-ENTER HOUSE adam
-INSERT KEY pat foobar
-TURN KEY pat
-ENTER HOUSE pat
-WHO'S INSIDE?
+> INSERT KEY adam key
+> TURN KEY adam
+> ENTER HOUSE adam
+> INSERT KEY pat foobar
+> TURN KEY pat
+> ENTER HOUSE pat
+> WHO'S INSIDE?
 
 Will produce the following output:
 
-KEY key INSERTED BY adam
-FAILURE adam UNABLE TO TURN KEY key
-ACCESS DENIED
-KEY foobar INSERTED BY pat
-SUCCESS pat TURNS KEY foobar
-ACCESS ALLOWED
-pat
+> KEY key INSERTED BY adam
+> FAILURE adam UNABLE TO TURN KEY key
+> ACCESS DENIED
+> KEY foobar INSERTED BY pat
+> SUCCESS pat TURNS KEY foobar
+> ACCESS ALLOWED
+> pat
 
