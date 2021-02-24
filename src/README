@@ -1,8 +1,4 @@
 name: Caden Scharpf
-ASU ID: 1211178056
-Description:
-This implimentation of the security policy relies heavily on the use of linked lists; primarily the search and insertion functions.
-The main function maintains updated lists of: users inside the house, keys in the lock, and authorized keys.
 
 Policy
 
